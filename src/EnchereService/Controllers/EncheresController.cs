@@ -83,4 +83,22 @@ public class EncheresController : ControllerBase
         return BadRequest("Erreur lors de la sauvegarde");
     }
 
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteEnchere(Guid id)
+    {
+        var enchere = await _context.Encheres.FindAsync(id);
+
+        if (enchere == null) return NotFound();
+
+        //TODO : check seller == username
+
+        _context.Encheres.Remove(enchere);
+
+        var result = await _context.SaveChangesAsync() > 0;
+
+        if (!result) return BadRequest("Impossible de mettre à jour la base");
+
+        return Ok();
+    }
+
 }
