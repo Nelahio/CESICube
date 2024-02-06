@@ -59,4 +59,28 @@ public class EncheresController : ControllerBase
         return CreatedAtAction(nameof(GetEnchereById),
         new { enchere.Id }, _mapper.Map<EnchereDto>(enchere));
     }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult> UpdateEnchere(Guid id, UpdateEnchereDto updateEnchereDto)
+    {
+        var enchere = await _context.Encheres.Include(x => x.Produit)
+        .FirstOrDefaultAsync(x => x.Id == id);
+        if (enchere == null) return NotFound();
+
+        //TODO : check seller == username
+
+        enchere.Produit.Make = updateEnchereDto.Make ?? enchere.Produit.Make;
+        enchere.Produit.ProductName = updateEnchereDto.ProductName ?? enchere.Produit.ProductName;
+        enchere.Produit.Color = updateEnchereDto.Color ?? enchere.Produit.Color;
+        enchere.Produit.Size = updateEnchereDto.Size ?? enchere.Produit.Size;
+        enchere.Produit.Year = updateEnchereDto.Year ?? enchere.Produit.Year;
+        enchere.Produit.Comments = updateEnchereDto.Comments ?? enchere.Produit.Comments;
+
+        var result = await _context.SaveChangesAsync() > 0;
+
+        if (result) return Ok();
+
+        return BadRequest("Erreur lors de la sauvegarde");
+    }
+
 }
