@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EnchereService.Data;
 using EnchereService.DTOs;
+using EnchereService.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -40,5 +41,22 @@ public class EncheresController : ControllerBase
         if (enchere == null) return NotFound();
 
         return _mapper.Map<EnchereDto>(enchere);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<EnchereDto>> CreateEnchere(CreateEnchereDto enchereDto)
+    {
+        var enchere = _mapper.Map<Enchere>(enchereDto);
+        // TODO : add current user as seller
+        enchere.Seller = "test";
+
+        _context.Encheres.Add(enchere);
+
+        var result = await _context.SaveChangesAsync() > 0;
+
+        if (!result) return BadRequest("Impossible de sauvegarder en base");
+
+        return CreatedAtAction(nameof(GetEnchereById),
+        new { enchere.Id }, _mapper.Map<EnchereDto>(enchere));
     }
 }
