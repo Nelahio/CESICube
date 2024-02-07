@@ -9,9 +9,9 @@ namespace RechercheService.Controllers;
 public class RechercheController : ControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<List<Produit>>> RechercheProduits(string searchTerm)
+    public async Task<ActionResult<List<Produit>>> RechercheProduits(string searchTerm, int pageNumber = 1, int pageSize = 4)
     {
-        var query = DB.Find<Produit>();
+        var query = DB.PagedSearch<Produit>();
         query.Sort(x => x.Ascending(a => a.Make));
 
         if (!string.IsNullOrEmpty(searchTerm))
@@ -19,8 +19,16 @@ public class RechercheController : ControllerBase
             query.Match(Search.Full, searchTerm).SortByTextScore();
         }
 
+        query.PageNumber(pageNumber);
+        query.PageSize(pageSize);
+
         var result = await query.ExecuteAsync();
 
-        return result;
+        return Ok(new
+        {
+            results = result.Results,
+            pageCount = result.PageCount,
+            totalCount = result.TotalCount
+        });
     }
 }
