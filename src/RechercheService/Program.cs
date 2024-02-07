@@ -1,5 +1,6 @@
 using MongoDB.Driver;
 using MongoDB.Entities;
+using RechercheService.Data;
 using RechercheService.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,13 +16,13 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-await DB.InitAsync("RechercheDb", MongoClientSettings
-.FromConnectionString(builder.Configuration.GetConnectionString("MongoDbConnection")));
-
-await DB.Index<Produit>()
-.Key(x => x.Make, KeyType.Text)
-.Key(x => x.ProductName, KeyType.Text)
-.Key(x => x.Color, KeyType.Text)
-.CreateAsync();
+try
+{
+    await DbInitializer.InitDb(app);
+}
+catch (Exception e)
+{
+    Console.WriteLine(e);
+}
 
 app.Run();
