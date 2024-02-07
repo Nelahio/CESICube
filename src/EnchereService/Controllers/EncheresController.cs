@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using EnchereService.Data;
 using EnchereService.DTOs;
 using EnchereService.Entities;
@@ -21,14 +22,16 @@ public class EncheresController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<EnchereDto>>> GetAllEncheres()
+    public async Task<ActionResult<List<EnchereDto>>> GetAllEncheres(string date)
     {
-        var encheres = await _context.Encheres
-        .Include(x => x.Produit)
-        .OrderBy(x => x.Produit.Make)
-        .ToListAsync();
+        var query = _context.Encheres.OrderBy(x => x.Produit.Make).AsQueryable();
 
-        return _mapper.Map<List<EnchereDto>>(encheres);
+        if (!string.IsNullOrEmpty(date))
+        {
+            query = query.Where(x => x.UpdatedAt.CompareTo(DateTime.Parse(date).ToUniversalTime()) > 0);
+        }
+
+        return await query.ProjectTo<EnchereDto>(_mapper.ConfigurationProvider).ToListAsync();
     }
 
     [HttpGet("{id}")]

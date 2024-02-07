@@ -2,6 +2,7 @@
 using MongoDB.Driver;
 using MongoDB.Entities;
 using RechercheService.Models;
+using RechercheService.Services;
 
 namespace RechercheService.Data;
 
@@ -21,19 +22,14 @@ public class DbInitializer
 
         var count = await DB.CountAsync<Produit>();
 
-        if (count == 0)
-        {
-            Console.WriteLine("Pas de données - en attente des données");
-            var produitData = await File.ReadAllTextAsync("Data/encheres.json");
+        using var scope = app.Services.CreateScope();
 
-            var options = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            };
+        var httpClient = scope.ServiceProvider.GetRequiredService<EnchereSvcHttpClient>();
 
-            var produits = JsonSerializer.Deserialize<List<Produit>>(produitData, options);
+        var produits = await httpClient.GetProduitsForSearchDb();
 
-            await DB.SaveAsync(produits);
-        }
+        Console.WriteLine(produits.Count + " retournés du service enchere");
+
+        if (produits.Count > 0) await DB.SaveAsync(produits);
     }
 }

@@ -2,12 +2,14 @@ using MongoDB.Driver;
 using MongoDB.Entities;
 using RechercheService.Data;
 using RechercheService.Models;
+using RechercheService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddHttpClient<EnchereSvcHttpClient>();
 
 var app = builder.Build();
 
