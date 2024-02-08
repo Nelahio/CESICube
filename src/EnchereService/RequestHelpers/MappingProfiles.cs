@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Contracts;
 using EnchereService.DTOs;
 using EnchereService.Entities;
 
@@ -13,5 +14,6 @@ public class MappingProfiles : Profile
         CreateMap<CreateEnchereDto, Enchere>()
         .ForMember(d => d.Produit, o => o.MapFrom(s => s));
         CreateMap<CreateEnchereDto, Produit>();
+        CreateMap<EnchereDto, EnchereCreated>();
     }
 }
