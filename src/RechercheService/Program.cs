@@ -1,6 +1,7 @@
 using MassTransit;
 using Polly;
 using Polly.Extensions.Http;
+using RechercheService;
 using RechercheService.Data;
 using RechercheService.Services;
 
@@ -9,9 +10,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddHttpClient<EnchereSvcHttpClient>().AddPolicyHandler(GetPolicy());
 builder.Services.AddMassTransit(x =>
 {
+    x.AddConsumersFromNamespaceContaining<EnchereCreatedConsumer>();
+
+    x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter("recherche", false));
+
     x.UsingRabbitMq((context, cfg) =>
     {
         cfg.ConfigureEndpoints(context);
