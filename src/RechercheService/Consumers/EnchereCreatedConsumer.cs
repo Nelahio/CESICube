@@ -20,6 +20,8 @@ public class EnchereCreatedConsumer : IConsumer<EnchereCreated>
 
         var produit = _mapper.Map<Produit>(context.Message);
 
+        if (produit.ProductName == "Foo") throw new ArgumentException("Impossible de vendre un produit avec le nom Foo");
+
         await produit.SaveAsync();
     }
 }
