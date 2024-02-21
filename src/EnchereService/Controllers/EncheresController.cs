@@ -107,6 +107,8 @@ public class EncheresController : ControllerBase
 
         _context.Encheres.Remove(enchere);
 
+        await _publishEndpoint.Publish<EnchereDeleted>(new EnchereDeleted { Id = enchere.Id.ToString() });
+
         var result = await _context.SaveChangesAsync() > 0;
 
         if (!result) return BadRequest("Impossible de mettre à jour la base");
