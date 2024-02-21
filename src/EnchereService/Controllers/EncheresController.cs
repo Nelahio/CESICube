@@ -87,6 +87,8 @@ public class EncheresController : ControllerBase
         enchere.Produit.Year = updateEnchereDto.Year ?? enchere.Produit.Year;
         enchere.Produit.Comments = updateEnchereDto.Comments ?? enchere.Produit.Comments;
 
+        await _publishEndpoint.Publish<EnchereUpdated>(_mapper.Map<EnchereUpdated>(enchere));
+
         var result = await _context.SaveChangesAsync() > 0;
 
         if (result) return Ok();
