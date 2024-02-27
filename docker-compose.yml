@@ -37,3 +37,19 @@ services:
     depends_on:
       - postgres
       - rabbitmq
+  recherche-ms:
+    image: nelahio/recherche-ms:latest
+    build:
+      context: .
+      dockerfile: src/RechercheService/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - RabbitMq__Host=rabbitmq
+      - ConnectionStrings__MongoDbConnection=mongodb://root:mongopw@mongodb
+      - EnchereServiceUrl=http://enchere-ms
+    ports:
+      - 7002:80
+    depends_on:
+      - mongodb
+      - rabbitmq
