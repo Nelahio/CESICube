@@ -27,7 +27,7 @@ public class EnchereFinishedConsumer : IConsumer<EnchereFinished>
         }
 
         enchere.Statut = enchere.SoldAmount > enchere.ReservePrice
-        ? Statut.Finish : Statut.ReserveNotMet;
+        ? Statut.Finished : Statut.ReserveNotMet;
 
         await _dbContext.SaveChangesAsync();
     }

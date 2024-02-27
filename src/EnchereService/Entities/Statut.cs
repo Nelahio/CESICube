@@ -3,6 +3,6 @@
 public enum Statut
 {
     Live,
-    Finish,
+    Finished,
     ReserveNotMet
 }
