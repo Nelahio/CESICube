@@ -3,7 +3,7 @@ import EnchereCard from './EnchereCard';
 import { log } from 'console';
 
 async function getData() {
-    const res = await fetch('http://localhost:6001/recherche');
+    const res = await fetch('http://localhost:6001/recherche?pageSize=10');
 
     if (!res.ok) throw new Error('Erreur lors de la récupération des données');
 
@@ -13,7 +13,7 @@ async function getData() {
 export default async function Listings() {
     const data = await getData();
     return (
-        <div>
+        <div className='grid grid-cols-4 gap-6'>
             {data && data.results.map((enchere: any) => {
                 return <EnchereCard enchere={enchere} key={enchere.id} />
             })}
