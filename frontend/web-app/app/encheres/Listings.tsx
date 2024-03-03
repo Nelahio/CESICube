@@ -1,29 +1,37 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import EnchereCard from "./EnchereCard";
-import { log } from "console";
 import { Enchere, PagedResult } from "@/types";
 import AppPagination from "../components/AppPagination";
+import { getData } from "../actions/enchereActions";
 
-async function getData(): Promise<PagedResult<Enchere>> {
-  const res = await fetch("http://localhost:6001/recherche?pageSize=4");
+export default function Listings() {
+  const [encheres, setEncheres] = useState<Enchere[]>([]);
+  const [pageCount, setPageCount] = useState(0);
+  const [pageNumber, setPageNumber] = useState(1);
 
-  if (!res.ok) throw new Error("Erreur lors de la récupération des données");
+  useEffect(() => {
+    getData(pageNumber).then((data) => {
+      setEncheres(data.results);
+      setPageCount(data.pageCount);
+    });
+  }, [pageNumber]);
 
-  return res.json();
-}
-
-export default async function Listings() {
-  const data = await getData();
+  if (encheres.length === 0) return <h3>Chargement...</h3>;
   return (
     <>
       <div className="grid grid-cols-4 gap-6">
-        {data &&
-          data.results.map((enchere) => {
-            return <EnchereCard enchere={enchere} key={enchere.id} />;
-          })}
+        {encheres.map((enchere) => {
+          return <EnchereCard enchere={enchere} key={enchere.id} />;
+        })}
       </div>
       <div className="flex justify-center mt-4">
-        <AppPagination currentPage={1} pageCount={data.pageCount} />
+        <AppPagination
+          pageChanged={setPageNumber}
+          currentPage={pageNumber}
+          pageCount={pageCount}
+        />
       </div>
     </>
   );
