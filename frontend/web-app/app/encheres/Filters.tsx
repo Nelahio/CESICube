@@ -8,34 +8,34 @@ import { GiFinishLine, GiFlame } from "react-icons/gi";
 const pageSizeButtons = [4, 8, 12];
 const orderButtons = [
   {
-    label: "Alphabetical",
+    label: "Alphabet",
     icon: AiOutlineSortAscending,
     value: "make",
   },
   {
-    label: "End date",
+    label: "Date de fin",
     icon: AiOutlineClockCircle,
     value: "endingSoon",
   },
   {
-    label: "Recently added",
+    label: "Ajoutée(s) récemment",
     icon: BsFillStopCircleFill,
     value: "new",
   },
 ];
 const filterButtons = [
   {
-    label: "Live Auctions",
+    label: "En cours",
     icon: GiFlame,
     value: "live",
   },
   {
-    label: "Ending < 6 hours",
+    label: "Terminée(s) < 6 heures",
     icon: GiFinishLine,
     value: "endingSoon",
   },
   {
-    label: "Completed",
+    label: "Terminée(s)",
     icon: BsStopwatchFill,
     value: "finished",
   },
@@ -49,7 +49,9 @@ export default function Filters() {
   return (
     <div className="flex justify-between items-center mb-4">
       <div>
-        <span className="uppercase text-sm text-gray-500 mr-2">Filter by</span>
+        <span className="uppercase text-sm text-gray-500 mr-2">
+          Filtrer par
+        </span>
         <ButtonGroup>
           {filterButtons.map(({ label, icon: IconBase, value }) => (
             <Button
@@ -64,7 +66,7 @@ export default function Filters() {
         </ButtonGroup>
       </div>
       <div>
-        <span className="uppercase text-sm text-gray-500 mr-2">Order by</span>
+        <span className="uppercase text-sm text-gray-500 mr-2">Trier par</span>
         <ButtonGroup>
           {orderButtons.map(({ label, icon: IconBase, value }) => (
             <Button
@@ -79,7 +81,7 @@ export default function Filters() {
         </ButtonGroup>
       </div>
       <div>
-        <span className="uppercase text-sm text-gray-500 mr-2">Page size</span>
+        <span className="uppercase text-sm text-gray-500 mr-2">Afficher</span>
         <ButtonGroup>
           {pageSizeButtons.map((value, i) => (
             <Button
