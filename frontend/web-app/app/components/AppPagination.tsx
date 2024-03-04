@@ -22,6 +22,8 @@ export default function AppPagination({
       layout="pagination"
       showIcons={true}
       className="text-blue-500 mb-5"
+      previousLabel="Précédent"
+      nextLabel="Suivant"
     />
   );
 }
