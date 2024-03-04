@@ -8,10 +8,10 @@ export const authOptions: NextAuthOptions = {
   providers: [
     DuendeIdentityServer6({
       id: "id-server",
-      clientId: "cesiApp",
+      clientId: "nextApp",
       clientSecret: "secret",
       issuer: "http://localhost:5000",
-      authorization: { params: { scope: "openid profile enchereApp" } },
+      authorization: { params: { scope: "openid profile cesiApp" } },
       idToken: true,
     }),
   ],
