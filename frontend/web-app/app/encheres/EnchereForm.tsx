@@ -4,6 +4,7 @@ import { Button, TextInput } from "flowbite-react";
 import React, { useEffect } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import Input from "../components/Input";
+import DateInput from "../components/DateInput";
 
 export default function EnchereForm() {
   const {
@@ -67,14 +68,16 @@ export default function EnchereForm() {
           type="number"
           rules={{ required: "Le prix de réserve est obligatoire" }}
         />
-        <Input
+        <DateInput
           label="Date de fin d'enchère"
           name="auctionEnd"
           control={control}
-          type="date"
-          rules={{ required: "La date est obligatoire" }}
+          dateFormat={"dd MMMM yyyy h:mm a"}
+          showTimeSelect
+          rules={{ required: "La date de fin est obligatoire" }}
         />
       </div>
+
       <Input
         label="Commentaires"
         name="comments"
