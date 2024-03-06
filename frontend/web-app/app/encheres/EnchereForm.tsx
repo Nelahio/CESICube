@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, TextInput } from "flowbite-react";
-import React from "react";
+import React, { useEffect } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import Input from "../components/Input";
 
@@ -11,7 +11,13 @@ export default function EnchereForm() {
     handleSubmit,
     setFocus,
     formState: { isSubmitting, isValid, isDirty, errors },
-  } = useForm();
+  } = useForm({
+    mode: "onTouched",
+  });
+
+  useEffect(() => {
+    setFocus("make");
+  }, [setFocus]);
 
   function onSubmit(data: FieldValues) {
     console.log(data);
@@ -30,6 +36,56 @@ export default function EnchereForm() {
         name="productName"
         control={control}
         rules={{ required: "Le nom est obligatoire" }}
+      />
+      <Input
+        label="Couleur"
+        name="color"
+        control={control}
+        rules={{ required: "La couleur est obligatoire" }}
+      />
+      <div className="grid grid-cols-2 gap-3">
+        <Input
+          label="Année"
+          name="year"
+          control={control}
+          type="number"
+          rules={{ required: "L'année est obligatoire" }}
+        />
+        <Input
+          label="Taille/dimensions"
+          name="size"
+          control={control}
+          type="number"
+          rules={{ required: "Les dimensions sont obligatoires" }}
+        />
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <Input
+          label="Prix de réserve (entrer 0 si pas de réserve)"
+          name="reservePrice"
+          control={control}
+          type="number"
+          rules={{ required: "Le prix de réserve est obligatoire" }}
+        />
+        <Input
+          label="Date de fin d'enchère"
+          name="auctionEnd"
+          control={control}
+          type="date"
+          rules={{ required: "La date est obligatoire" }}
+        />
+      </div>
+      <Input
+        label="Commentaires"
+        name="comments"
+        control={control}
+        rules={{ required: "Les commentaires sont obligatoires" }}
+      />
+      <Input
+        label="URL Image"
+        name="imageUrl"
+        control={control}
+        rules={{ required: "L'URL de l'image est obligatoire" }}
       />
       <div className="flex justify-between">
         <Button outline color="gray">
