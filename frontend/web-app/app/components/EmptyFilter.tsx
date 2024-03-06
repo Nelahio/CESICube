@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useParamsStore } from "@/hooks/useParamsStore";
 import React from "react";
@@ -10,16 +10,16 @@ type Props = {
   title?: string;
   subtitle?: string;
   showReset?: boolean;
-  showLogin?: boolean
-  callbackUrl?: string
+  showLogin?: boolean;
+  callbackUrl?: string;
 };
 
 export default function EmptyFilter({
-  title = "Aucune occurence pour ce filtre",
+  title = "Aucune occurrence pour ce filtre",
   subtitle = "Essayez un autre filtre",
   showReset,
   showLogin,
-  callbackUrl
+  callbackUrl,
 }: Props) {
   const reset = useParamsStore((state) => state.reset);
   return (
@@ -32,7 +32,7 @@ export default function EmptyFilter({
           </Button>
         )}
         {showLogin && (
-          <Button outline onClick={() => signIn('id-server', { callbackUrl })}>
+          <Button outline onClick={() => signIn("id-server", { callbackUrl })}>
             Connexion
           </Button>
         )}
