@@ -24,7 +24,7 @@ export default function EnchereImage({ imageUrl }: Props) {
           : "grayscale-0 blur-0 scale-100"
       }`}
       sizes="(max-width:768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-      onLoadingComplete={() => setLoading(false)}
+      onLoad={() => setLoading(false)}
     />
   );
 }
