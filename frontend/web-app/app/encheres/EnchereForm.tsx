@@ -7,6 +7,7 @@ import Input from "../components/Input";
 import DateInput from "../components/DateInput";
 import { createEnchere } from "../actions/enchereActions";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 export default function EnchereForm() {
   const router = useRouter();
@@ -27,11 +28,11 @@ export default function EnchereForm() {
     try {
       const res = await createEnchere(data);
       if (res.error) {
-        throw new Error(res.error);
+        throw res.error;
       }
       router.push(`/encheres/details/${res.id}`);
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      toast.error(error.status + ' ' + error.message)
     }
   }
 
