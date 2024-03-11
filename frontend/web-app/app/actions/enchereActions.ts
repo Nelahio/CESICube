@@ -4,6 +4,7 @@ import { Enchere, PagedResult } from "@/types";
 import { getTokenWorkaround } from "./authActions";
 import { fetchWrapper } from "@/lib/fetchWrapper";
 import { FieldValues } from "react-hook-form";
+import { revalidatePath } from "next/cache";
 
 export async function getData(query: string): Promise<PagedResult<Enchere>> {
   return await fetchWrapper.get(`recherche${query}`);
@@ -25,5 +26,11 @@ export async function createEnchere(data: FieldValues) {
 }
 
 export async function getDetailedViewData(id: string): Promise<Enchere> {
-  return await fetchWrapper.get(`encheres/${id}`)
+  return await fetchWrapper.get(`encheres/${id}`);
+}
+
+export async function updateEnchere(data: FieldValues, id: string) {
+  const res = await fetchWrapper.put(`encheres/${id}`, data);
+  revalidatePath(`/encheres/${id}`);
+  return res;
 }

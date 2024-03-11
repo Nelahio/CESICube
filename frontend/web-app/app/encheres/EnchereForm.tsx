@@ -5,34 +5,56 @@ import React, { useEffect } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import Input from "../components/Input";
 import DateInput from "../components/DateInput";
-import { createEnchere } from "../actions/enchereActions";
-import { useRouter } from "next/navigation";
+import { createEnchere, updateEnchere } from "../actions/enchereActions";
+import { usePathname, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { Enchere } from "@/types";
 
-export default function EnchereForm() {
+type Props = {
+  enchere?: Enchere;
+};
+
+export default function EnchereForm({ enchere }: Props) {
   const router = useRouter();
+  const pathName = usePathname();
   const {
     control,
     handleSubmit,
     setFocus,
+    reset,
     formState: { isSubmitting, isValid },
   } = useForm({
     mode: "onTouched",
   });
 
   useEffect(() => {
+    if (enchere) {
+      const { make, productName, size, comments, year, color } = enchere;
+      reset({ make, productName, size, comments, year, color });
+    }
     setFocus("make");
   }, [setFocus]);
 
   async function onSubmit(data: FieldValues) {
     try {
-      const res = await createEnchere(data);
+      let id = "";
+      let res;
+      if (pathName === "/encheres/create") {
+        res = await createEnchere(data);
+        id = res.id;
+      } else {
+        if (enchere) {
+          res = await updateEnchere(data, enchere.id);
+          id = enchere.id;
+        }
+      }
+
       if (res.error) {
         throw res.error;
       }
-      router.push(`/encheres/details/${res.id}`);
+      router.push(`/encheres/details/${id}`);
     } catch (error: any) {
-      toast.error(error.status + ' ' + error.message)
+      toast.error(error.status + " " + error.message);
     }
   }
 
@@ -72,36 +94,40 @@ export default function EnchereForm() {
           rules={{ required: "Les dimensions sont obligatoires" }}
         />
       </div>
-      <div className="grid grid-cols-2 gap-3">
-        <Input
-          label="Prix de réserve (entrer 0 si pas de réserve)"
-          name="reservePrice"
-          control={control}
-          type="number"
-          rules={{ required: "Le prix de réserve est obligatoire" }}
-        />
-        <DateInput
-          label="Date de fin d'enchère"
-          name="auctionEnd"
-          control={control}
-          dateFormat={"dd MMMM yyyy h:mm a"}
-          showTimeSelect
-          rules={{ required: "La date de fin est obligatoire" }}
-        />
-      </div>
+      {pathName === "/encheres/create" && (
+        <>
+          <div className="grid grid-cols-2 gap-3">
+            <Input
+              label="Prix de réserve (entrer 0 si pas de réserve)"
+              name="reservePrice"
+              control={control}
+              type="number"
+              rules={{ required: "Le prix de réserve est obligatoire" }}
+            />
+            <DateInput
+              label="Date de fin d'enchère"
+              name="auctionEnd"
+              control={control}
+              dateFormat={"dd MMMM yyyy h:mm a"}
+              showTimeSelect
+              rules={{ required: "La date de fin est obligatoire" }}
+            />
+          </div>
 
-      <Input
-        label="Commentaires"
-        name="comments"
-        control={control}
-        rules={{ required: "Les commentaires sont obligatoires" }}
-      />
-      <Input
-        label="URL Image"
-        name="imageUrl"
-        control={control}
-        rules={{ required: "L'URL de l'image est obligatoire" }}
-      />
+          <Input
+            label="Commentaires"
+            name="comments"
+            control={control}
+            rules={{ required: "Les commentaires sont obligatoires" }}
+          />
+          <Input
+            label="URL Image"
+            name="imageUrl"
+            control={control}
+            rules={{ required: "L'URL de l'image est obligatoire" }}
+          />
+        </>
+      )}
       <div className="flex justify-between">
         <Button outline color="gray">
           Annuler
