@@ -36,7 +36,7 @@ export default async function Details({ params }: { params: { id: string } }) {
           <EnchereImage imageUrl={data.imageUrl} />
         </div>
         <div className="border-2 rounded-lg p-2 bg-gray-100">
-          <Heading title="Bids" />
+          <Heading title="Offres" />
         </div>
       </div>
       <div className="mt-3 grid grid-cols-1 rounded-lg">
