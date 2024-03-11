@@ -34,3 +34,7 @@ export async function updateEnchere(data: FieldValues, id: string) {
   revalidatePath(`/encheres/${id}`);
   return res;
 }
+
+export async function deleteEnchere(id: string) {
+  return await fetchWrapper.del(`encheres/${id}`);
+}
