@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Entities;
 
@@ -8,9 +9,16 @@ namespace OffreService;
 [Route("api/[controller]")]
 public class OffresController : ControllerBase
 {
+    private readonly IMapper _mapper;
+
+    public OffresController(IMapper mapper)
+    {
+        _mapper = mapper;
+    }
+
     [Authorize]
     [HttpPost]
-    public async Task<ActionResult<Offre>> PlaceBid(string enchereId, int amount)
+    public async Task<ActionResult<OffreDto>> PlaceBid(string enchereId, int amount)
     {
         var enchere = await DB.Find<Enchere>().OneAsync(enchereId);
 
@@ -58,17 +66,17 @@ public class OffresController : ControllerBase
 
         await DB.SaveAsync(offre);
 
-        return Ok(offre);
+        return Ok(_mapper.Map<OffreDto>(offre));
     }
 
     [HttpGet("{enchereId}")]
-    public async Task<ActionResult<List<Offre>>> GetBidsForAuction(string enchereId)
+    public async Task<ActionResult<List<OffreDto>>> GetBidsForAuction(string enchereId)
     {
         var offres = await DB.Find<Offre>()
         .Match(e => e.AuctionId == enchereId)
         .Sort(o => o.Descending(e => e.BidTime))
         .ExecuteAsync();
 
-        return offres;
+        return offres.Select(_mapper.Map<OffreDto>).ToList();
     }
 }
