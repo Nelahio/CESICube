@@ -60,4 +60,15 @@ public class OffresController : ControllerBase
 
         return Ok(offre);
     }
+
+    [HttpGet("{enchereId}")]
+    public async Task<ActionResult<List<Offre>>> GetBidsForAuction(string enchereId)
+    {
+        var offres = await DB.Find<Offre>()
+        .Match(e => e.AuctionId == enchereId)
+        .Sort(o => o.Descending(e => e.BidTime))
+        .ExecuteAsync();
+
+        return offres;
+    }
 }
